@@ -1,29 +1,27 @@
+	#Importamos las siguiente librerias que necesitamos
 import psycopg2
 import sys
 import pprint
- 
+	#Le facilitamos los datos para la conexión a la base de datos 
 def main():
 	conn_string = "host='localhost' dbname='dbname' user='postgres' password='password'"
-	# print the connection string we will use to connect
+
+	# Imprimira la cadena con la cual estamos conectandonos a la base de datos
+
 	print "Connecting to database\n	->%s" % (conn_string)
  
-	# get a connection, if a connect cannot be made an exception will be raised here
+	# Obtenemos la conexion a la base de datos, si hay algún problema lo mostrara
 	conn = psycopg2.connect(conn_string)
  
-	# conn.cursor will return a cursor object, you can use this cursor to perform queries
+	# Cursores con los  que vamos a  ejecutar la  consulta
 	cursor = conn.cursor()
  
-	# execute our Query
+	# Ejecuta una consulta
 	cursor.execute("SELECT * FROM datosficheros")
  
-	# retrieve the records from the database
+	# Recibe los datos de la consulta a la base de datos
 	records = cursor.fetchall()
  
-	# print out the records using pretty print
-	# note that the NAMES of the columns are not shown, instead just indexes.
-	# for most people this isn't very useful so we'll show you how to return
-	# columns as a dictionary (hash) in the next example.
+	
+	# Imprimer los datos
 	pprint.pprint(records)
- 
-if __name__ == "__main__":
-	main()
