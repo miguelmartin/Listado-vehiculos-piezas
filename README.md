@@ -10,3 +10,15 @@ El proyecto va a consistir en la creación de una aplicación, através de una A
 
 
 De está manera utilizaremos, APIS, en este caso privada, Bases de datos, en este caso utilizaremos la base de datos que tenemos dónde están almacenados los vehículos y archivos, como por ejemplo las imágenes.
+
+
+Conectar a base de datos postgres desde linux para comprobar que tenemos conexión:
+
+La W es para forzar a que nos pida la contraseña:
+
+psql -h nombre_o_ip_servidor -d nombre_bd -U usuario -W
+
+Todo esto después de comprobar en el servidor de postgres, que en el fichero pg_hba.conf hemos puesto que acepte las conexiones desde la ip 
+
+o rango de IP`s que eligamos:
+
