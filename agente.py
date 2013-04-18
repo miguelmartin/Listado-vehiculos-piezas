@@ -4,7 +4,7 @@ import psycopg2
 import sys
 import pprint
 import cgi
-
+import os.path
 #Obtenemos valores
 
 print "Content-Type: text/html\n"
@@ -23,10 +23,11 @@ def main():
         resultado = cursor.fetchall()
 	print "<ul>"
 	for coche in resultado:
-		cursor2 = conn.cursor()
-        	cursor2.execute("select f.datos from vehiculos v,albumvehiculos a,ficheros fi,datosficheros f where v.idvehiculo=a.idvehiculo and fi.id=a.idficherofoto and f.masterid=a.idficherofoto and v.idvehiculo="+str(coche[0])+";")
-        	mypic2 = cursor2.fetchone()
-                open("/var/www/img/"+str(coche[0])+".jpg", 'wb').write(str(mypic2[0]))
+		if not os.path.exists("/var/www/img/"+str(coche[0])+".jpg"):
+			cursor2 = conn.cursor()
+                	cursor2.execute("select f.datos from vehiculos v,albumvehiculos a,ficheros fi,datosficheros f where v.idvehiculo=a.idvehiculo and fi.id=a.idficherofoto and f.masterid=a.idficherofoto and v.idvehiculo="+str(coche[0])+";")
+                	mypic2 = cursor2.fetchone()
+                	open("/var/www/img/"+str(coche[0])+".jpg", 'wb').write(str(mypic2[0]))
 		print "<il><img src='/img/"+str(coche[0])+".jpg' alt='Smiley face' height='60' width='60'>"+(coche[1])+"</il></br>"
 	print "</ul>"	
 if __name__ == "__main__":
