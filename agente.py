@@ -16,10 +16,10 @@ anno = form.getvalue("anno")
 
 #Conexion a la base de datos y consulta
 def main():
-        conn_string = "host='' dbname='' user='' password=''"
+        conn_string = "host='192.168.1.250' dbname='crvnet5' user='augusto' password='augusto2013'"
         conn = psycopg2.connect(conn_string)
         cursor = conn.cursor()
-        cursor.execute("select distinct(v.idvehiculo),v.nombreversion from vehiculos v,albumvehiculos a,ficheros fi,datosficheros f where v.idvehiculo=a.idvehiculo and fi.id=a.idficherofoto and f.masterid=a.idficherofoto and upper(nombreversion) like "+"'%"+marca.upper()+"%' and upper(nombreversion) like "+"'%"+modelo.upper()+"%' and añoversion like "+"'%"+anno+"%' and upper(otrocombustible) like "+"'%"+combustible.upper()+"%';")
+        cursor.execute("select distinct(v.idvehiculo),v.nombreversion,v.codigo from vehiculos v,albumvehiculos a,ficheros fi,datosficheros f where v.idvehiculo=a.idvehiculo and fi.id=a.idficherofoto and f.masterid=a.idficherofoto and upper(nombreversion) like "+"'%"+marca.upper()+"%' and upper(nombreversion) like "+"'%"+modelo.upper()+"%' and añoversion like "+"'%"+anno+"%' and upper(otrocombustible) like "+"'%"+combustible.upper()+"%';")
         resultado = cursor.fetchall()
 	print "<ul>"
 	for coche in resultado:
@@ -28,7 +28,7 @@ def main():
                 	cursor2.execute("select f.datos from vehiculos v,albumvehiculos a,ficheros fi,datosficheros f where v.idvehiculo=a.idvehiculo and fi.id=a.idficherofoto and f.masterid=a.idficherofoto and v.idvehiculo="+str(coche[0])+";")
                 	mypic2 = cursor2.fetchone()
                 	open("/var/www/img/"+str(coche[0])+".jpg", 'wb').write(str(mypic2[0]))
-		print "<il><img src='/img/"+str(coche[0])+".jpg' alt='Smiley face' height='60' width='60'>"+(coche[1])+"</il></br>"
+		print "<il><a href='/img/"+str(coche[0])+".jpg'><img src='/img/"+str(coche[0])+".jpg' alt='Smiley face' height='60' width='60'></a><a href='/cgi-bin/agente2.py?idvehiculo="+str(coche[0])+"'>"+(coche[1])+"</a>   "+"ID vehiculo: "+str(coche[2])+"</il></br>"
 	print "</ul>"	
 if __name__ == "__main__":
                 main()
