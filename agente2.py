@@ -18,7 +18,7 @@ for i in arguments.keys():
 
 #Conexion a la base de datos y consulta
 if not os.path.exists("/var/www/img/"+str(codvehiculo)+str(cont+1)+".jpg"):
- def main():
+	def main():
        		conn_string = "host='' dbname='' user='' password=''"
        		conn = psycopg2.connect(conn_string)
 		cursor2 = conn.cursor()	
@@ -41,7 +41,7 @@ else:
 		cont += 1
 
 def main():
-	conn_string = "host='192.168.1.250' dbname='crvnet5' user='augusto' password='augusto2013'"
+	conn_string = "host='' dbname='' user='' password=''"
         conn = psycopg2.connect(conn_string)
         cursor = conn.cursor()
         cursor.execute("select art.descripcion,es.refid from entradastock es inner join referencias ref on es.referencia = ref.referencia inner join articulos art on art.idarticulo = ref.idarticulo inner join versiones ver on ver.idversion = ref.idversion where es.refid in (select refid from stockvehiculo where idvehiculo = "+str(codvehiculo)+") ;")
