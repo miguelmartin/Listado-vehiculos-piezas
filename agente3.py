@@ -17,7 +17,23 @@ print ""
 arguments = cgi.FieldStorage()
 for i in arguments.keys():
 	refid =  arguments[i].value
-
+print "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"
+print "<html xmlns='http://www.w3.org/1999/xhtml'>"
+print "<head>"
+print "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />"
+print "<title>Tododesguace.com</title>"
+print "<link rel='stylesheet' type='text/css' href='/css/estilos.css' media='screen' /> "
+print "</head>"
+print "<body>"
+print "<div id='page'>"
+print "<div id='cabecera'>"
+print "<img id='imagencabecera' src='/img/tododesguacecom.jpg' alt='Tododesguacecom'></img>"
+print "<img src='/img/telefono11.jpg' alt='Tododesguacecom'></img>"
+print "</div>"
+print "<div id='menuh'>" 	
+print "<ul id='inicio'>"
+print "<li><a href='/index.html'>Inicio</a></li><li><a href='/indexpiezas.html'>Busqueda Por piezas</a></li><li><a href='/indexcoches.html'> Busqueda por vehículos </a></li></ul>"
+print "</div>"
 if not os.path.exists("/var/www/img/"+str(refid)+str(cont+1)+".jpg"):
 	def main():
        		conn_string = "host='' dbname='' user='' password=''"
@@ -54,7 +70,8 @@ def main():
                 print "<ul>"+str(datopieza[0])+"</ul>"
                 print "<ul>"+str(datopieza[2])+"</ul>"
                 print "<ul>"+str(datopieza[3])+"</ul>"
-                print "<ul>"+str(datopieza[4])+"</ul>"
-        print "</ul>"
+        print "</ul>"	
+	print "</div>"
+	print "</body>"
 if __name__ == "__main__":
         main()
