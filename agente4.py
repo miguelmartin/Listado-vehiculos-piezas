@@ -39,20 +39,25 @@ def main():
 	print "<ul id='inicio'>"
 	print "<li><a href='/index.html'>Inicio</a></li><li><a href='/indexpiezas.html'>Busqueda Por piezas</a></li><li><a href='/indexcoches.html'> Busqueda por vehículos </a></li></ul>"
 	print "</div>"
-	print modelo
-	print "<p><a href='/cgi-bin/agente4.py?MODELO="+modelo.upper()+"&COMBUSTIBLE="+combustible.upper()+"&OFFSET="+str(nuevovaloroffset)+"'>Siguiente</a></p>"
-        print "<a href='javascript:history.back(1)'>Anterior</a>"
+	print "<h3><a href='javascript:history.back(1)'>Anterior</a>"
+	print "<a href='/cgi-bin/agente4.py?MODELO="+modelo.upper()+"&COMBUSTIBLE="+combustible.upper()+"&OFFSET="+str(nuevovaloroffset)+"'>Siguiente   </a></h3>"
 	print "<ul>"	
 	for coche in resultado:
 		if not os.path.exists("/var/www/img/"+str(coche[0])+".jpg"):
 			cursor2 = conn.cursor()
                 	cursor2.execute("select f.datos from vehiculos v,albumvehiculos a,ficheros fi,datosficheros f where v.idvehiculo=a.idvehiculo and fi.id=a.idficherofoto and f.masterid=a.idficherofoto and v.idvehiculo="+str(coche[0])+";")
                 	mypic2 = cursor2.fetchone()
-                	open("/var/www/img/"+str(coche[0])+".jpg", 'wb').write(str(mypic2[0]))
-		print "<il><a href='/img/"+str(coche[0])+".jpg'><img id='vehiculo' src='/img/"+str(coche[0])+".jpg' alt='Smiley face' height='60' width='60'></a><a href='/cgi-bin/agente2.py?idvehiculo="+str(coche[0])+"'>"+(coche[1])+"</a>   "+"ID vehiculo: "+str(coche[2])+"</il></br>"
+                	if str(type(mypic2)) == "<type 'NoneType'>":
+                        	url = "<img id='vehiculo' src='/img/defecto.jpg' alt='Smiley face' height='100' width='100'></img>"
+                	else:
+				open("/var/www/img/"+str(coche[0])+".jpg", 'wb').write(str(mypic2[0]))
+				url = "<a href='/img/"+str(coche[0])+".jpg'><img id='vehiculo' src='/img/"+str(coche[0])+".jpg' alt='Smiley face' height='100' width='100'></a>"
+		else:
+			url = "<a href='/img/"+str(coche[0])+".jpg'><img id='vehiculo' src='/img/"+str(coche[0])+".jpg' alt='Smiley face' height='100' width='100'></a>"
+		print "<h3><il>"+str(url)+"<a href='/cgi-bin/agente2.py?idvehiculo="+str(coche[0])+"'>"+(coche[1])+" </a> "+"ID vehiculo: "+str(coche[2])+"</il></br></h3>"
 	print "</ul>"
-	print "<a href='javascript:history.back(1)'>Anterior</a>"
-	print "<a href='/cgi-bin/agente4.py?MODELO="+modelo.upper()+"&COMBUSTIBLE="+combustible.upper()+"&OFFSET="+str(nuevovaloroffset)+"'>Siguiente</a>"
+	print "<h3><a href='javascript:history.back(1)'>Anterior</a>"
+	print "<a href='/cgi-bin/agente4.py?MODELO="+modelo.upper()+"&COMBUSTIBLE="+combustible.upper()+"&OFFSET="+str(nuevovaloroffset)+"'>Siguiente</a></h3>"
 	print "</div>"
 	print "</div>"
 	print "</body>"
