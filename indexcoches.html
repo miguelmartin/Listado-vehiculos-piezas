@@ -4924,7 +4924,7 @@ combo[15]= IVECO15;
 </div>
 <div id='form'>
 <p>Seleccione la marca y el modelo:</p>
-<p>
+
 <form name="marcas" method="POST" action="/cgi-bin/agente.py"> 
 
 <select name="marca" onChange="agregarOpciones(this.form)"> 
@@ -5024,17 +5024,18 @@ combo[15]= IVECO15;
 </select> 
  
 <select name="modelo" onChange="direccion(this.form)"> 
- 
+
 <option value="">Esperando selección</option> 
-</select> <br/><br/><br/>
-Elija el combustible:
+</select>
+
+<p>Elija el combustible:
 <select name="combustible">
 <option name="combustible" type="text"  value="gasoil">Diesel</option>
 <option name="combustible" type="text"  value="gasolina" selected="selected">Gasolina</option>
 <option name="combustible" type="text"  value="%%" selected="selected">Cualquiera</option>
-</select> <br/><br/>
+</select> <br/><br/></p>
 
-<input type="submit" value="Consultar"></form>
+<p><input type="submit" value="Consultar"></form></p>
 </p>
 </div>
 </div>
