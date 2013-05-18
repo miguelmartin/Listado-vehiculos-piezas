@@ -38,7 +38,7 @@ def main():
 	print "<ul id='inicio'>"
 	print "<li><a href='/index.html'>Inicio</a></li><li><a href='/indexpiezas.html'>Busqueda Por piezas</a></li><li><a href='/indexcoches.html'> Busqueda por vehículos </a></li></ul>"
 	print "</div>"
-	print "<p><a href='/cgi-bin/agente4.py?MODELO="+modelo.upper()+"&COMBUSTIBLE="+combustible.upper()+"&OFFSET="+str(nuevovaloroffset)+"'>Siguiente</a></p>"
+	print "<h3><a href='/cgi-bin/agente4.py?MODELO="+modelo.upper()+"&COMBUSTIBLE="+combustible.upper()+"&OFFSET="+str(nuevovaloroffset)+"'>Siguiente</a></h3>"
 	print "<ul>"
 	for coche in resultado:
 		if not os.path.exists("/var/www/img/"+str(coche[0])+".jpg"):
@@ -46,15 +46,15 @@ def main():
                 	cursor2.execute("select f.datos from vehiculos v,albumvehiculos a,ficheros fi,datosficheros f where v.idvehiculo=a.idvehiculo and fi.id=a.idficherofoto and f.masterid=a.idficherofoto and v.idvehiculo="+str(coche[0])+";")
                 	mypic2 = cursor2.fetchone()
                 	if str(type(mypic2)) == "<type 'NoneType'>":
-                        	url = "<img id='vehiculo' src='/img/defecto.jpg' alt='Smiley face' height='60' width='60'></img>"
+                        	url = "<img id='vehiculo' src='/img/defecto.jpg' alt='Smiley face' height='100' width='100'></img>"
                 	else:
 				open("/var/www/img/"+str(coche[0])+".jpg", 'wb').write(str(mypic2[0]))
-				url = "<a href='/img/"+str(coche[0])+".jpg'><img id='vehiculo' src='/img/"+str(coche[0])+".jpg' alt='Smiley face' height='60' width='60'></a>"
+				url = "<a href='/img/"+str(coche[0])+".jpg'><img id='vehiculo' src='/img/"+str(coche[0])+".jpg' alt='Smiley face' height='100' width='100'></a>"
 		else:
-			url = "<a href='/img/"+str(coche[0])+".jpg'><img id='vehiculo' src='/img/"+str(coche[0])+".jpg' alt='Smiley face' height='60' width='60'></a>"
-		print "<il>"+str(url)+"<a href='/cgi-bin/agente2.py?idvehiculo="+str(coche[0])+"'>"+(coche[1])+" </a> "+"ID vehiculo: "+str(coche[2])+"</il></br>"
+			url = "<a href='/img/"+str(coche[0])+".jpg'><img id='vehiculo' src='/img/"+str(coche[0])+".jpg' alt='Smiley face' height='100' width='100'></a>"
+		print "<il><h3>"+str(url)+"<a href='/cgi-bin/agente2.py?idvehiculo="+str(coche[0])+"'>"+(coche[1])+" </a> "+"ID vehiculo: "+str(coche[2])+"</il></h3>"
 	print "</ul>"
-	print "<p><a href='/cgi-bin/agente4.py?MODELO="+modelo.upper()+"&COMBUSTIBLE="+combustible.upper()+"&OFFSET="+str(nuevovaloroffset)+"'>Siguiente</a></p>"	
+	print "<h3><a href='/cgi-bin/agente4.py?MODELO="+modelo.upper()+"&COMBUSTIBLE="+combustible.upper()+"&OFFSET="+str(nuevovaloroffset)+"'>Siguiente</a></h3>"	
 	print "</div>"
 	print "</body>"
 if __name__ == "__main__":
