@@ -43,18 +43,18 @@ if not os.path.exists("/var/www/img/"+str(refid)+str(cont+1)+".jpg"):
 		fotos = cursor2.fetchall()
 		cont2 = 0
 		if fotos == []:
-			print "<img src='/img/defecto.jpg' alt='Smiley face' height='100' width='100'></img>"
+			print "<img id='imagenarticulo' src='/img/defecto.jpg' alt='Smiley face' height='130' width='130'></img>"
 		else:
 			for foto in fotos:
 				open("/var/www/img/"+str(refid)+""+str(cont2)+".jpg", 'wb').write(str(foto[0]))
-				print  "<a href='/img/"+str(refid)+str(cont2)+".jpg'><img src='/img/"+str(refid)+str(cont2)+".jpg' alt='Smiley face' height='100' width='100'></a>"	
+				print  "<a href='/img/"+str(refid)+str(cont2)+".jpg'><img id='imagenarticulo' src='/img/"+str(refid)+str(cont2)+".jpg' alt='Smiley face' height='130' width='130'></a>"	
 				cont2 += 1
 	if __name__ == "__main__":
        		main()
 else:
 	numarchivos = subprocess.check_output("ls -l /var/www/img/"+str(refid)+"[0-9].jpg | wc -l", shell=True)
 	for x in xrange(int(numarchivos)):
-		print "<a href='/img/"+str(refid)+str(cont)+".jpg'><img src='/img/"+str(refid)+str(cont)+".jpg' alt='Smiley face' height='100' width='100'></a>"
+		print "<a href='/img/"+str(refid)+str(cont)+".jpg'><img id='imagenarticulo' src='/img/"+str(refid)+str(cont)+".jpg' alt='Smiley face' height='130' width='130'></a>"
 		cont += 1
 
 #Conexion a la base de datos y consulta
@@ -62,15 +62,21 @@ def main():
         conn_string = "host='' dbname='' user='' password=''"
         conn = psycopg2.connect(conn_string)
         cursor = conn.cursor()
-        cursor.execute("select referencia,estado,ubicacion,precio,metadatos from entradastock where refid="+str(refid)+" ;")
+        cursor.execute("select referencia,estado,ubicacion,precio,reffab2,reffab1,refequiv,nota from entradastock where refid="+str(refid)+" ;")
         resultado = cursor.fetchall()
 	print "<ul>"
         for datopieza in resultado:
-                print "<ul>"+str(datopieza[1])+"</ul>"
-                print "<ul>"+str(datopieza[0])+"</ul>"
-                print "<ul>"+str(datopieza[2])+"</ul>"
-                print "<ul>"+str(datopieza[3])+"</ul>"
-        print "</ul>"	
+		print "<ul>"
+                print "<p><il>Estado: "+str(datopieza[1])+"</il></p>"
+                print "<p><il>Referencia: "+str(datopieza[0])+"</il></p>"
+                print "<p><il>Ubicacion: "+str(datopieza[2])+"</il></p>"
+                print "<p><il>Precio: "+str(datopieza[3])+"€" "</il></p>"
+		print "<p><il>Referencia 1: "+str(datopieza[4])+"</il></p>"
+                print "<p><il>Referencia 2: "+str(datopieza[5])+"</il></p>"
+                print "<p><il>Referencia equivalente: "+str(datopieza[6])+"</il></p>"
+        	print "<p><il>Nota: "+str(datopieza[7])+"</il></p>"
+		print "</ul>"
+	print "</ul>"	
 	print "</div>"
 	print "</body>"
 if __name__ == "__main__":
