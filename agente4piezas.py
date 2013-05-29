@@ -11,18 +11,21 @@ print "Content-Type: text/html"
 print ""
 valores = cgi.FieldStorage()
 
-modelo = valores["MODELO"].value
-nompieza =  valores["NOMPIEZA"].value
-refpieza = valores["REFPIEZA"].value
+modelo = valores["NOMPIEZA"].value
+modelo = modelo.replace(" ", "%")
 valoroffset =  valores["OFFSET"].value
 
 def main():
         conn_string = "host='' dbname='' user='' password=''"
         conn = psycopg2.connect(conn_string)
         cursor = conn.cursor()
-        cursor.execute("select refid,(es.refid || ' ' || es.reffab1 || ' ' ||es.reffab2 || ' ' || es.refequiv) as refpieza,(art.descripcion || ' ' || ver.nombrecompleto) AS Nombrepieza from entradastock es ,articulos art,versiones ver,referencias ref where es.referencia = ref.referencia and art.idarticulo = ref.idarticulo and ver.idversion = ref.idversion and (art.descripcion || ' ' || ver.nombrecompleto) like "+"'%"+nompieza.upper()+"%' and (es.refid || ' ' || es.reffab1 || ' ' ||es.reffab2 || ' ' || es.refequiv) like "+"'%"+refpieza.upper()+"%' and ver.nombrecompleto like "+"'%"+modelo.upper()+"%'  LIMIT '10' OFFSET "+"'"+valoroffset+"';")
+        cursor.execute("select refid,(es.refid || ' ' || es.reffab1 || ' ' ||es.reffab2 || ' ' || es.refequiv) as refpieza,(art.descripcion || ' ' || ver.nombrecompleto) AS Nombrepieza from entradastock es ,articulos art,versiones ver,referencias ref where es.referencia = ref.referencia and art.idarticulo = ref.idarticulo and ver.idversion = ref.idversion and (art.descripcion || ' ' || ver.nombrecompleto|| ' ' ||es.refid || ' ' || es.reffab1 || ' ' ||es.reffab2 || ' ' || es.refequiv) like "+"'%"+modelo.upper()+"%' and ( es.ubicacion in ( 'Almacenada' ) or ( (es.ubicacion = 'Montada en vehículo' or es.ubicacion = 'En control de calidad' or es.ubicacion = 'En proceso de desmontaje') and es.estado = 'Material revisado' ) ) order by es.refid desc  LIMIT '10' OFFSET "+"'"+valoroffset+"';")
         resultado = cursor.fetchall()
 	nuevovaloroffset = int(valoroffset)+10
+	segundovaloroffset = int(valoroffset)-10
+	cursor3 = conn.cursor()
+	cursor3.execute("select count(*) from entradastock es ,articulos art,versiones ver,referencias ref where es.referencia = ref.referencia and art.idarticulo = ref.idarticulo and ver.idversion = ref.idversion and (art.descripcion || ' ' || ver.nombrecompleto|| ' ' ||es.refid || ' ' || es.reffab1 || ' ' ||es.reffab2 || ' ' || es.refequiv) like "+"'%"+modelo.upper()+"%' and ( es.ubicacion in ( 'Almacenada' ) or ( (es.ubicacion = 'Montada en vehículo' or es.ubicacion = 'En control de calidad' or es.ubicacion = 'En proceso de desmontaje') and es.estado = 'Material revisado' ) );")
+	numfilas = cursor3.fetchall()
 	print "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"
 	print "<html xmlns='http://www.w3.org/1999/xhtml'>"
 	print "<head>"
@@ -38,10 +41,11 @@ def main():
 	print "</div>"
 	print "<div id='menuh'>" 	
 	print "<ul id='inicio'>"
-	print "<li><a href='/index.html'>Inicio</a></li><li><a href='/indexpiezas.html'>Busqueda Por piezas</a></li><li><a href='/indexcoches.html'> Busqueda por vehículos </a></li></ul>"
+	print "<li><a  href='/index.html'>Inicio</a></li><li><a href='/indexpiezas.html'>Busqueda Por piezas</a></li><li><a href='/indexcoches.html'> Busqueda por vehículos </a></li></ul>"
 	print "</div>"
-	print "<h3><a href='javascript:history.back(1)'>Anterior</a>"
-	print "<a href='/cgi-bin/agente4piezas.py?NOMPIEZA="+nompieza.upper()+"&REFPIEZA="+refpieza.upper()+"&MODELO="+modelo.upper()+"&OFFSET="+str(nuevovaloroffset)+"'>Siguiente</a></h3>"
+	print "<h3><a class='anterior'href='javascript:history.back(1)'> << Anterior</a>"	
+	if numfilas[0][0] - int(valoroffset) > 10:
+		print "<a class='siguiente' href='/cgi-bin/agente4piezas.py?NOMPIEZA="+modelo.upper()+"&OFFSET="+str(nuevovaloroffset)+"'>Siguiente >> </a>"
 	print "<ul>"
 	for coche in resultado:
 		if not os.path.exists("/var/www/img/"+str(coche[0])+".jpg"):
@@ -55,11 +59,15 @@ def main():
 				url = "<a href='/img/"+str(coche[0])+".jpg'><img id='vehiculo' src='/img/"+str(coche[0])+".jpg' alt='Smiley face' height='100' width='100'></a>"
 		else:
 			url = "<a href='/img/"+str(coche[0])+".jpg'><img id='vehiculo' src='/img/"+str(coche[0])+".jpg' alt='Smiley face' height='100' width='100'></a>"
-		print "<h3><il>"+str(url)+"<a href='/cgi-bin/agente3.py?idvehiculo="+str(coche[0])+"'>"+(coche[2])+"</a>   "+"ID pieza: "+str(coche[0])+"</il></h3>"
-	print "</ul>"	
-	print "<h3><a href='javascript:history.back(1)'>Anterior</a>"
-	print "<a href='/cgi-bin/agente4piezas.py?NOMPIEZA="+nompieza.upper()+"&REFPIEZA="+refpieza.upper()+"&MODELO="+modelo.upper()+"&OFFSET="+str(nuevovaloroffset)+"'>Siguiente</a></h3>"	
+		print "<h3><il>"+str(url)+"<a href='/cgi-bin/agente3.py?idvehiculo="+str(coche[0])+"&NOMVERSION="+(coche[2])+"'>"+(coche[2])+"</a>   "+"ID pieza: "+str(coche[0])[0:-2]+"</il></h3>"
+	print "</ul>"
+	print "<h3><a class='anterior' href='javascript:history.back(1)'> << Anterior</a>"	
+	if numfilas[0][0] - int(valoroffset) > 10:
+		print "<a class='siguiente' href='/cgi-bin/agente4piezas.py?NOMPIEZA="+modelo.upper()+"&OFFSET="+str(nuevovaloroffset)+"'>Siguiente >> </a></h3>"	
 	print "</div>"
+	print "<div id='footer'>"
+        print "©Tododesguace.com 2013"
+        print "</div>"
         print "</div>"
         print "</body>"
 
